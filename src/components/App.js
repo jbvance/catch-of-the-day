@@ -11,10 +11,11 @@ class App extends React.Component{
   constructor(){
     super();
     this.addFish = this.addFish.bind(this);
+    this.updateFish = this.updateFish.bind(this);
+    this.removeFish = this.removeFish.bind(this);
     this.loadSamples = this.loadSamples.bind(this);
     this.addToOrder = this.addToOrder.bind(this);
-    this.updateFish = this.updateFish.bind(this);
-
+    this.removeFromOrder = this.removeFromOrder.bind(this);
 
     //getInitialState
     this.state = {
@@ -67,6 +68,12 @@ updateFish(key, updatedFish){
   //could also use this.setState({fishes: fishes })
 }
 
+removeFish(key){
+  const fishes = {...this.state.fishes};
+  fishes[key] = null;
+  this.setState({ fishes });
+}
+
 loadSamples(){
   this.setState({
     fishes: sampleFishes
@@ -81,6 +88,14 @@ addToOrder(key){
   this.setState({ order });
   //Could also say this.setState({ order: order });
 
+}
+
+removeFromOrder(key){
+  const order = {...this.state.order};
+  //can use delete because not limited by Firebase
+  //could also say order[key] = null
+  delete order[key];
+  this.setState({ order });
 }
 
   render(){
@@ -99,9 +114,11 @@ addToOrder(key){
         <Order
           fishes={this.state.fishes}
           order={this.state.order}
-          params={this.props.params} />
+          params={this.props.params}
+          removeFromOrder={this.removeFromOrder}/>
         <Inventory
           addFish={this.addFish}
+          removeFish={this.removeFish}
           loadSamples={this.loadSamples}
           fishes={this.state.fishes}
           updateFish={this.updateFish}
